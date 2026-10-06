@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recent Calls | SCAI</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --border: #e3e8ef;
+      --text: #1f2933;
+      --text-muted: #667085;
+      --success-bg: #e6f6ec;
+      --success-text: #146c2e;
+      --danger-bg: #fdecec;
+      --danger-text: #b42318;
+      --warning-bg: #fff4e0;
+      --warning-text: #b54708;
+      --space-4: 16px;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: var(--space-4);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: var(--space-4);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #fcfcfd;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status--answered {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .status--missed {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .status--transferred {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    @media (max-width: 640px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      tr {
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+      td:last-child {
+        border-bottom: none;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 16px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 500;
+        color: var(--text-muted);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Recent Calls</h1>
+
+    <div class="card">
+      <table>
+        <caption class="visually-hidden">Recent calls handled by the SCAI voice agent</caption>
+        <thead>
+          <tr>
+            <th scope="col">Caller Number</th>
+            <th scope="col">Date & Time</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Status</th>
+            <th scope="col">Agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Caller Number">+91 98765 43210</td>
+            <td data-label="Date & Time">2026-10-01 09:15</td>
+            <td data-label="Duration">03:42</td>
+            <td data-label="Status"><span class="status status--answered">Answered</span></td>
+            <td data-label="Agent">Aarav</td>
+          </tr>
+          <tr>
+            <td data-label="Caller Number">+91 98765 11111</td>
+            <td data-label="Date & Time">2026-10-01 10:20</td>
+            <td data-label="Duration">00:00</td>
+            <td data-label="Status"><span class="status status--missed">Missed</span></td>
+            <td data-label="Agent">Neha</td>
+          </tr>
+          <tr>
+            <td data-label="Caller Number">+91 98765 22222</td>
+            <td data-label="Date & Time">2026-10-01 11:45</td>
+            <td data-label="Duration">12:30</td>
+            <td data-label="Status"><span class="status status--transferred">Transferred</span></td>
+            <td data-label="Agent">Rohit</td>
+          </tr>
+          <tr>
+            <td data-label="Caller Number">+91 98765 33333</td>
+            <td data-label="Date & Time">2026-10-01 13:00</td>
+            <td data-label="Duration">05:15</td>
+            <td data-label="Status"><span class="status status--answered">Answered</span></td>
+            <td data-label="Agent">Priya</td>
+          </tr>
+          <tr>
+            <td data-label="Caller Number">+91 98765 44444</td>
+            <td data-label="Date & Time">2026-10-01 14:10</td>
+            <td data-label="Duration">00:00</td>
+            <td data-label="Status"><span class="status status--missed">Missed</span></td>
+            <td data-label="Agent">Karan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
