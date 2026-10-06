@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Record | SCAI</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --border: #e3e8ef;
+      --border-focus: #2563eb;
+      --text: #1f2933;
+      --text-muted: #667085;
+      --error-color: #b42318;
+      --success-bg: #146c2e;
+      --success-text: #ffffff;
+      --space-4: 16px;
+      --radius: 10px;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      margin: 24px auto;
+      max-width: 480px;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: var(--space-4);
+    }
+
+    form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .field {
+      margin-bottom: var(--space-4);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 0.875rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .invalid {
+      border-color: var(--error-color);
+    }
+    
+    .invalid:focus {
+      border-color: var(--error-color);
+      box-shadow: 0 0 0 2px rgba(180, 35, 24, 0.2);
+    }
+
+    .error {
+      color: var(--error-color);
+      font-size: 0.875rem;
+      min-height: 1.2rem;
+      margin: 4px 0 0 0;
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .notes-header label {
+      margin-bottom: 0;
+    }
+
+    .counter {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background: #1d4ed8;
+    }
+
+    #toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      padding: 12px 24px;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    #toast[hidden] {
+      display: none;
+    }
+
+    .visually-hidden { position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>New Record</h1>
+
+    <form id="recordForm" novalidate>
+      <div class="field">
+        <label for="contactName">Contact Name</label>
+        <input id="contactName" name="contactName" type="text" autocomplete="name"
+               aria-describedby="contactName-error">
+        <p class="error" id="contactName-error" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel"
+               aria-describedby="phone-error">
+        <p class="error" id="phone-error" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label for="apptDate">Appointment Date</label>
+        <input id="apptDate" name="apptDate" type="date"
+               aria-describedby="apptDate-error">
+        <p class="error" id="apptDate-error" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label for="apptTime">Appointment Time</label>
+        <input id="apptTime" name="apptTime" type="time"
+               aria-describedby="apptTime-error">
+        <p class="error" id="apptTime-error" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <div class="notes-header">
+          <label for="notes">Notes</label>
+          <span class="counter" id="notesCounter">0 / 200</span>
+        </div>
+        <textarea id="notes" name="notes" rows="4" aria-describedby="notes-error"></textarea>
+        <p class="error" id="notes-error" role="alert"></p>
+      </div>
+
+      <button type="submit">Save Record</button>
+    </form>
+
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+  </main>
+
+  <script src="validation.js" defer></script>
+</body>
+</html>

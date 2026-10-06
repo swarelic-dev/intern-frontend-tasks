@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recent Calls (Filterable) | SCAI</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --border: #e3e8ef;
+      --text: #1f2933;
+      --text-muted: #667085;
+      --primary: #2563eb;
+      --success-bg: #e6f6ec;
+      --success-text: #146c2e;
+      --danger-bg: #fdecec;
+      --danger-text: #b42318;
+      --warning-bg: #fff4e0;
+      --warning-text: #b54708;
+      --space-4: 16px;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      margin: 24px auto;
+      max-width: 1000px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+    }
+
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid var(--border); padding: 12px 16px; text-align: left; }
+    th { background: #fcfcfd; color: var(--text-muted); font-weight: 500; font-size: 0.875rem; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #f9fafb; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: var(--space-4);
+      align-items: center;
+    }
+
+    .controls label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .controls input, .controls select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .controls input:focus, .controls select:focus, .controls button:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .controls button {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+      align-self: flex-end;
+    }
+
+    .controls button:hover {
+      background: #f9fafb;
+    }
+
+    tr[hidden] { display: none; }
+
+    #emptyState {
+      text-align: center;
+      padding: 32px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    #resultCount {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .visually-hidden { position: absolute; left: -9999px; }
+
+    .status {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .status--answered { background: var(--success-bg); color: var(--success-text); }
+    .status--missed { background: var(--danger-bg); color: var(--danger-text); }
+    .status--transferred { background: var(--warning-bg); color: var(--warning-text); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Recent Calls</h1>
+
+    <div class="controls">
+      <label>
+        Status
+        <select id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="Answered">Answered</option>
+          <option value="Missed">Missed</option>
+          <option value="Transferred">Transferred</option>
+        </select>
+      </label>
+      <label>
+        Caller Number
+        <input id="searchInput" type="search" placeholder="Search number...">
+      </label>
+      <button id="clearFilters" type="button">Clear filters</button>
+    </div>
+
+    <p id="resultCount" aria-live="polite"></p>
+
+    <div class="card">
+      <table id="callsTable">
+        <thead>
+          <tr>
+            <th scope="col">Caller Number</th>
+            <th scope="col">Date &amp; Time</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Status</th>
+            <th scope="col">Agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-status="Answered">
+            <td>+91 98765 43210</td><td>2026-10-01 09:15</td><td>03:42</td><td><span class="status status--answered">Answered</span></td><td>Aarav</td>
+          </tr>
+          <tr data-status="Missed">
+            <td>+91 91234 56780</td><td>2026-10-01 09:48</td><td>00:00</td><td><span class="status status--missed">Missed</span></td><td>N/A</td>
+          </tr>
+          <tr data-status="Transferred">
+            <td>+91 99887 76655</td><td>2026-10-01 10:22</td><td>05:10</td><td><span class="status status--transferred">Transferred</span></td><td>Meera</td>
+          </tr>
+          <tr data-status="Answered">
+            <td>+91 90909 12121</td><td>2026-10-01 11:05</td><td>02:31</td><td><span class="status status--answered">Answered</span></td><td>Kabir</td>
+          </tr>
+          <tr data-status="Missed">
+            <td>+91 98111 22334</td><td>2026-10-01 11:40</td><td>00:00</td><td><span class="status status--missed">Missed</span></td><td>N/A</td>
+          </tr>
+          <tr data-status="Answered">
+            <td>+91 97000 11223</td><td>2026-10-01 12:12</td><td>07:55</td><td><span class="status status--answered">Answered</span></td><td>Aarav</td>
+          </tr>
+        </tbody>
+      </table>
+      <p id="emptyState" hidden>No calls match your filters.</p>
+    </div>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
