@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recent Calls (Filterable) | SCAI</title>
+
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --border: #e3e8ef;
+      --text: #1f2933;
+      --text-muted: #667085;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #e8efff;
+
+      --success-bg: #e6f6ec;
+      --success-text: #146c2e;
+      --danger-bg: #fdecec;
+      --danger-text: #b42318;
+      --warning-bg: #fff4e0;
+      --warning-text: #b54708;
+
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06),
+        0 1px 3px rgba(16, 24, 40, 0.1);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
+
+    /* TODO 1 completed: controls bar */
+    .controls {
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* TODO 2 completed: controls and button */
+    select,
+    input,
+    button {
+      min-height: 42px;
+      padding: 9px 12px;
+      font: inherit;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    select,
+    input {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    input {
+      min-width: 250px;
+    }
+
+    button {
+      cursor: pointer;
+      color: #ffffff;
+      background: var(--primary);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    select:focus-visible,
+    input:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--primary-soft);
+      outline-offset: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      font-variant-numeric: tabular-nums;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: #f9fafb;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    /* TODO 3 completed */
+    tr[hidden] {
+      display: none;
+    }
+
+    /* TODO 4 completed */
+    #resultCount {
+      margin: 0 0 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    #emptyState {
+      padding: 24px;
+      margin-top: 16px;
+      text-align: center;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+
+    #emptyState[hidden] {
+      display: none;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      left: -9999px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .controls {
+        align-items: stretch;
+      }
+
+      .control-group,
+      select,
+      input,
+      button {
+        width: 100%;
+      }
+
+      input {
+        min-width: 0;
+      }
+
+      thead {
+        position: absolute;
+        left: -9999px;
+      }
+
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      table {
+        background: transparent;
+        box-shadow: none;
+      }
+
+      tbody tr {
+        margin-bottom: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 1px solid var(--border);
+      }
+
+      tbody tr td:last-child {
+        border-bottom: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Recent Calls</h1>
+
+    <!-- TODO 5 completed: controls -->
+    <div class="controls">
+      <div class="control-group">
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter">
+          <option value="all">All</option>
+          <option value="Answered">Answered</option>
+          <option value="Missed">Missed</option>
+          <option value="Transferred">Transferred</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="searchInput">Caller Number</label>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search caller number"
+          autocomplete="off"
+        >
+      </div>
+
+      <button id="clearFilters" type="button">Clear filters</button>
+    </div>
+
+    <!-- TODO 6 completed -->
+    <p id="resultCount" aria-live="polite"></p>
+
+    <table id="callsTable">
+      <caption class="visually-hidden">
+        Recent calls handled by the SCAI voice agent
+      </caption>
+
+      <thead>
+        <tr>
+          <th scope="col">Caller Number</th>
+          <th scope="col">Date &amp; Time</th>
+          <th scope="col">Duration</th>
+          <th scope="col">Status</th>
+          <th scope="col">Agent</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr data-status="Answered">
+          <td data-label="Caller Number">+91 98765 43210</td>
+          <td data-label="Date & Time">2026-10-01 09:15</td>
+          <td data-label="Duration">03:42</td>
+          <td data-label="Status">Answered</td>
+          <td data-label="Agent">Aarav</td>
+        </tr>
+
+        <tr data-status="Missed">
+          <td data-label="Caller Number">+91 91234 56780</td>
+          <td data-label="Date & Time">2026-10-01 09:48</td>
+          <td data-label="Duration">00:00</td>
+          <td data-label="Status">Missed</td>
+          <td data-label="Agent">N/A</td>
+        </tr>
+
+        <tr data-status="Transferred">
+          <td data-label="Caller Number">+91 99887 76655</td>
+          <td data-label="Date & Time">2026-10-01 10:22</td>
+          <td data-label="Duration">05:10</td>
+          <td data-label="Status">Transferred</td>
+          <td data-label="Agent">Meera</td>
+        </tr>
+
+        <tr data-status="Answered">
+          <td data-label="Caller Number">+91 90909 12121</td>
+          <td data-label="Date & Time">2026-10-01 11:05</td>
+          <td data-label="Duration">02:31</td>
+          <td data-label="Status">Answered</td>
+          <td data-label="Agent">Kabir</td>
+        </tr>
+
+        <tr data-status="Missed">
+          <td data-label="Caller Number">+91 98111 22334</td>
+          <td data-label="Date & Time">2026-10-01 11:40</td>
+          <td data-label="Duration">00:00</td>
+          <td data-label="Status">Missed</td>
+          <td data-label="Agent">N/A</td>
+        </tr>
+
+        <tr data-status="Answered">
+          <td data-label="Caller Number">+91 97000 11223</td>
+          <td data-label="Date & Time">2026-10-01 12:12</td>
+          <td data-label="Duration">07:55</td>
+          <td data-label="Status">Answered</td>
+          <td data-label="Agent">Aarav</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- TODO 7 completed -->
+    <p id="emptyState" hidden>No calls match your filters.</p>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
