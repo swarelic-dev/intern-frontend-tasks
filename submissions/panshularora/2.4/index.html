@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Directory | SCAI</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --border: #e3e8ef;
+      --text: #1f2933;
+      --text-muted: #667085;
+      --primary: #2563eb;
+      --danger: #b42318;
+      --danger-bg: #fdecec;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0 0 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #e8efff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      margin: 0 0 8px;
+    }
+
+    .card p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+
+    .card a {
+      color: var(--primary);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      background: #eef2f7;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 4px solid #e3e8ef;
+      border-top-color: #2563eb;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation-duration: 3s; }
+    }
+
+    #errorBox {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #f5c2c7;
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    #retryBtn {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      font: inherit;
+    }
+
+    #retryBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Team Directory</h1>
+
+    <div id="loader" role="status">
+      <div class="spinner"></div>
+      <p>Loading users...</p>
+    </div>
+
+    <div id="errorBox" role="alert" hidden>
+      <p id="errorMessage"></p>
+      <button id="retryBtn" type="button">Retry</button>
+    </div>
+
+    <section id="userGrid" class="grid" hidden aria-label="Users"></section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
